@@ -17,7 +17,7 @@ def make_frame(X, Y):
     Xn = X / torch.linalg.norm(X)
     Y = Y - torch.dot(Y, Xn) * Xn
     Yn = Y / torch.linalg.norm(Y)
-    Z = torch.cross(Xn,Yn)
+    Z = torch.cross(Xn, Yn, dim=-1)
     Zn =  Z / torch.linalg.norm(Z)
     return torch.stack((Xn,Yn,Zn), dim=-1)
 
@@ -2267,7 +2267,7 @@ class ChemicalData:
 
         self.NFRAMES = max([len(f) for f in self.frames])
 
-        atomized_protein_frames = torch.load(script_dir+"atomized_protein_frames.pt")
+        # atomized_protein_frames = torch.load(script_dir+"atomized_protein_frames.pt")
 
     def load_derived_data(self, params):
         # resolve tip atom indices

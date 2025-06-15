@@ -69,7 +69,7 @@ class ConvSE3FuseLevel(Enum):
 
 
 class RadialProfile(nn.Module):
-    """
+    r"""
     Radial profile function.
     Outputs weights used to weigh basis matrices in order to get convolution kernels.
     In TFN notation: $R^{l,k}$
@@ -189,7 +189,7 @@ class VersatileConvSE3(nn.Module):
                     if basis is not None:
                         # This block performs the einsum n i l, n o i f, n l f k -> n o k
                         basis_view = basis[e_i:e_j].view(e_j-e_i, in_dim, -1)
-                        with torch.cuda.amp.autocast(False):
+                        with torch.amp.autocast('cuda', enabled=False):
                             tmp = (features[e_i:e_j] @ basis_view.float()).view(e_j-e_i, -1, basis.shape[-1])
                             retslice = (radial_weights.float() @ tmp)[:, :, :out_dim]
                             retval[e_i:e_j] = retslice

@@ -78,7 +78,7 @@ class AttentionSE3(nn.Module):
 
             with nvtx_range('attention dot product + softmax'):
                 # Compute attention weights (softmax of inner product between key and query)
-                with torch.cuda.amp.autocast(False):
+                with torch.amp.autocast('cuda', enabled=False):
                     edge_weights = dgl.ops.e_dot_v(graph, key, query).squeeze(-1)
                     edge_weights /= np.sqrt(self.key_fiber.num_features)
                     edge_weights = edge_softmax(graph, edge_weights)
@@ -163,7 +163,7 @@ class AttentionBlockSE3(nn.Module):
                 key, value = self._get_key_value_from_fused(fused_key_value)
 
             with nvtx_range('queries'):
-                with torch.cuda.amp.autocast(False):
+                with torch.amp.autocast('cuda', enabled=False):
                     query = self.to_query(node_features)
 
             z = self.attention(value, key, query, graph)
